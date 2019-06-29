@@ -1,10 +1,15 @@
 import Foundation
 
-public class Tablero{
+public class Tablero: CustomStringConvertible{
     let tamaño: Int!
     var damas = [Dama]()
     var tablero: [[Int]]
     var colisiones: Int!
+    
+    public var description: String {
+        return "Tablero: \(tamaño!) \(colisiones!) \(damas) \(tablero)"
+    }
+
     
     /// Iniciamos la matriz en 0's
     init(tamaño: Int) {
@@ -27,38 +32,16 @@ public class Tablero{
         }
     }
     
+    public func getTablero() -> [[Int]] {
+        return self.tablero
+    }
+    
     public func getColisiones() -> Int {
         return self.colisiones
     }
     
     public func getDamas() -> [Dama] {
         return self.damas
-    }
-    
-    
-    /*
-     * Lista que contiene a los indice de las casillas candidatas para colocar
-     * una nueva reina.
-     *
-     * Para que sean candidatas tienen que generar 0 colisiones, de otro modo
-     * se desechan
-     *
-     * @param renglon
-     * @param columna
-     *
-     * @return Lista de candidatos
-     */
-    
-    public func LRC(columna: Int) -> [Int] {
-        var posiciones = [Int]()
-        
-        for i in 0 ... self.tamaño {
-            if (self.tablero[i][columna] == 0){
-                posiciones.append(i)
-            }
-        }
-        
-        return posiciones
     }
     
     /// Insertamos una dama en el tablero y actualizamos el contador de colisiones

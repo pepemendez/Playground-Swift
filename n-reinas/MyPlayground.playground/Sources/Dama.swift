@@ -1,9 +1,13 @@
 import Foundation
 
-public class Dama{
+public class Dama: CustomStringConvertible{
     var renglon: Int
     var columna: Int
     var colisiones: Int
+    
+    public var description: String {
+        return "Dama: \(renglon),\(columna) \(colisiones)"
+    }
     
     init(ren: Int, col: Int, colisiones: Int) {
         self.renglon = ren
