@@ -28,14 +28,13 @@ class MyViewController : UIViewController {
         
         board.centerVertical(superView: view)
         board.centerHorizontal(superView: view)
-        board.setWidth(constant: 250)
-        board.setHeight(constant: 250)
+        board.setWidth(constant: 300)
+        board.setHeight(constant: 300)
         
         self.view = view
     }
     
     @objc func buttonTapped() {
-        board.paint = !board.paint
         board.setNeedsDisplay()
     }
 }
