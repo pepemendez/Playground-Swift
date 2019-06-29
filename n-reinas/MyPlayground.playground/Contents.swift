@@ -35,7 +35,7 @@ class MyViewController : UIViewController {
     }
     
     @objc func buttonTapped() {
-        board.size = 15
+        board.size = 8
         board.setNeedsDisplay()
     }
 }

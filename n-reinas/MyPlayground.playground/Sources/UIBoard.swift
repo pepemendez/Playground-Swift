@@ -1,25 +1,30 @@
 import UIKit
 
-public class UIBoard: UIView {
-    
+public class UIBoard: UIView, SolutionDelegate {
     var solve = false
     public var size = 8
     var tablero: Tablero!
+    var tablero2: LocalSearchSolver!
+    
+    /// If we need to update our solutions
+    public func improved() {
+        self.setNeedsDisplay()
+    }
     
     /// If we need to set our board and put our queens in place
     func createBoard(){
         self.tablero = Tablero(tamaño: size)
-        
-        for i in 0 ..< size {
-            tablero.insertarDama(renglon: i, columna: i)
-        }
+        self.tablero2 = LocalSearchSolver(reinas: size, delegate: self)
     }
-    
     
     /// We initialize and paint our things
     func board() {
         if(!solve){
             createBoard()
+            solve = true
+        }
+        else{
+            tablero2.Solve()
         }
         
         let currGraphicsContext = UIGraphicsGetCurrentContext()
@@ -45,7 +50,7 @@ public class UIBoard: UIView {
                                                  width: self.frame.width/CGFloat(size),
                                                  height: self.frame.width/CGFloat(size)))
                 
-                if(tablero.getTablero()[i][j] > 0){
+                if(tablero2.getTablero()[i][j] > 0){
                     currGraphicsContext?.setFillColor(UIColor.red.cgColor)
                     
                     currGraphicsContext?.fillEllipse(in: CGRect(x: (self.frame.width/CGFloat(size))*CGFloat(j),
