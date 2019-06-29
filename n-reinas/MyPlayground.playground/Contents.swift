@@ -16,7 +16,7 @@ class MyViewController : UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: "buttonTapped", for: .touchUpInside)
 
-        board.backgroundColor = UIColor.brown
+        board.backgroundColor = UIColor.white
         board.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(button)
         view.addSubview(board)
@@ -35,7 +35,7 @@ class MyViewController : UIViewController {
     }
     
     @objc func buttonTapped() {
-        board.paint = true
+        board.paint = !board.paint
         board.setNeedsDisplay()
     }
 }
