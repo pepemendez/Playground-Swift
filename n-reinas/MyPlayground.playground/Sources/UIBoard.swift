@@ -6,6 +6,7 @@ public class UIBoard: UIView {
     public var size = 8
     var tablero: Tablero!
     
+    /// If we need to set our board and put our queens in place
     func createBoard(){
         self.tablero = Tablero(tamaño: size)
         
@@ -14,6 +15,8 @@ public class UIBoard: UIView {
         }
     }
     
+    
+    /// We initialize and paint our things
     func board() {
         if(!solve){
             createBoard()
@@ -25,6 +28,8 @@ public class UIBoard: UIView {
         drawBorders(currGraphicsContext: currGraphicsContext)
     }
     
+    
+    /// We draw our squares and we check if for some square there is a queen, if it's then we draw a circle
     func drawChess(currGraphicsContext: CGContext?){
         for i in 0 ..< size {
             for j in 0 ..< size {
@@ -55,21 +60,27 @@ public class UIBoard: UIView {
         
     }
     
+    /// We draw the outer borders for our chess board
     func drawBorders(currGraphicsContext: CGContext?){
         currGraphicsContext?.setLineWidth(1.0)
         currGraphicsContext?.setStrokeColor(UIColor.black.cgColor)
+        
+        //Left
         currGraphicsContext?.move(to: CGPoint(x: 0, y: 0)) // begin point
         currGraphicsContext?.addLine(to: CGPoint(x: 0, y: self.frame.height)) // end point
         currGraphicsContext?.strokePath()
         
+        //Right
         currGraphicsContext?.move(to: CGPoint(x: self.frame.width, y: 0)) // begin point
         currGraphicsContext?.addLine(to: CGPoint(x: self.frame.width, y: self.frame.height)) // end point
         currGraphicsContext?.strokePath()
         
+        //Top
         currGraphicsContext?.move(to: CGPoint(x: 0, y: 0)) // begin point
         currGraphicsContext?.addLine(to: CGPoint(x: self.frame.width, y: 0)) // end
         currGraphicsContext?.strokePath()
         
+        //Bottom
         currGraphicsContext?.move(to: CGPoint(x: 0, y: self.frame.height)) // begin point
         currGraphicsContext?.addLine(to: CGPoint(x: self.frame.width, y: self.frame.height)) // end
         currGraphicsContext?.strokePath()
