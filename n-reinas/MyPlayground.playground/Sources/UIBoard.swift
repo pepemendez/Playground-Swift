@@ -2,7 +2,7 @@ import UIKit
 
 public class UIBoard: UIView {
     
-    var size = 8
+    public var size = 8
     
     func board() {
         let currGraphicsContext = UIGraphicsGetCurrentContext()
