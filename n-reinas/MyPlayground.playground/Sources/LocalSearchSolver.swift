@@ -1,7 +1,7 @@
 import UIKit
 
 public protocol SolutionDelegate: class {
-    func improved()
+    func improved(point1: Int, point2: Int)
 }
 
 public class LocalSearchSolver {
@@ -28,8 +28,9 @@ public class LocalSearchSolver {
     func LocalSearch() {
         let indice1 = Int.random(in: 0 ..< self.mReinas.num_reinas)
         let indice2 = Int.random(in: 0 ..< self.mReinas.num_reinas)
-        
+
         self.mReinas.r.swapAt(indice1, indice2)
+        
         
         let colision = self.mReinas.Colision()
         ///If we didn't improve then we just revert everything
@@ -39,7 +40,7 @@ public class LocalSearchSolver {
         }
         else{
             self.maxColisiones = colision
-            self.delegate?.improved()
+            self.delegate?.improved(point1: indice1, point2: indice2)
         }
         
     }

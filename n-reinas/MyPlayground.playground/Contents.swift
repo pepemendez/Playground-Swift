@@ -21,7 +21,6 @@ class MyViewController : UIViewController, SolverDelegate {
     }
     
     func improvement(f: Int) {
-        //print("solution: \(f)")
         label.text = "Current solution: \(f)"
     }
     

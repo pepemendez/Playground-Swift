@@ -7,17 +7,24 @@ public protocol SolverDelegate: class{
     func time(seconds: Double)
 }
 
-/// I tried to create clusters for our queens, at best for 250 queens our drawing time
-/// pass from 0.0005~ to 0.0001, isn't worthing
 public class UIBoard: UIView, SolutionDelegate {
     public var size = 8
     var tablero2: LocalSearchSolver!
     var chessLayer: CGLayer?
-
+    var queensLayer: CGLayer?
+    var queensPositions: [Int]!
+    
+    var point1: Int!
+    var point2: Int!
+    
     public weak var delegate: SolverDelegate?
     
     /// If we need to update our screen acording with our solutions
-    public func improved() {
+    public func improved(point1: Int, point2: Int) {
+        
+        self.point1 = point1
+        self.point2 = point2
+        
         if(tablero2.maxColisiones > 0){
             delegate?.improvement(f: tablero2.maxColisiones)
         }
@@ -31,6 +38,10 @@ public class UIBoard: UIView, SolutionDelegate {
     /// If we need to set our board and put our queens in place
     func createBoard(){
         self.tablero2 = LocalSearchSolver(reinas: size, delegate: self)
+        queensPositions = [Int]()
+        queensLayer = nil
+
+        queensPositions.append(contentsOf: self.tablero2.mReinas.r)
     }
     
     /// We initialize and paint our things
@@ -40,9 +51,9 @@ public class UIBoard: UIView, SolutionDelegate {
         let currGraphicsContext = UIGraphicsGetCurrentContext()
         
         drawChess(currGraphicsContext: currGraphicsContext)
-        drawBorders(currGraphicsContext: currGraphicsContext)
         drawQueens(currGraphicsContext: currGraphicsContext)
-        
+        drawBorders(currGraphicsContext: currGraphicsContext)
+
         let now = Date()
         let time =  now.timeIntervalSince(start)
         
@@ -67,13 +78,47 @@ public class UIBoard: UIView, SolutionDelegate {
 
         currGraphicsContext?.setFillColor(UIColor.red.cgColor)
         
-        for i in 0 ..< size {
-            currGraphicsContext?.fillEllipse(in:
-                CGRect(x: width*CGFloat(reinas[i]),
-                       y: width*CGFloat(i),
+        if(queensLayer == nil){
+            print("queensLayer nil")
+            queensLayer = CGLayer(currGraphicsContext!, size: CGSize(width: self.frame.width, height: self.frame.height), auxiliaryInfo: nil)
+            
+            let layerContext = queensLayer?.context
+            layerContext?.setFillColor(UIColor.red.cgColor)
+            
+            for i in 0 ..< size {
+                layerContext?.fillEllipse(in:
+                    CGRect(x: width*CGFloat(reinas[i]),
+                           y: width*CGFloat(i),
+                           width: width,
+                           height: width))
+            }
+        }
+        else{
+            let layerContext = queensLayer?.context
+            
+            layerContext?.setFillColor(UIColor.red.cgColor)
+            
+            layerContext?.clear(CGRect(x: width*CGFloat(queensPositions[point1]), y: width*CGFloat(point1), width: width, height: width))
+            
+            layerContext?.fillEllipse(in:
+                CGRect(x: width*CGFloat(reinas[point1]),
+                       y: width*CGFloat(point1),
                        width: width,
                        height: width))
+            
+            layerContext?.clear(CGRect(x: width*CGFloat(queensPositions[point2]), y: width*CGFloat(point2), width: width, height: width))
+            
+            layerContext?.fillEllipse(in:
+                CGRect(x: width*CGFloat(reinas[point2]),
+                       y: width*CGFloat(point2),
+                       width: width,
+                       height: width))
+            
+            self.queensPositions.removeAll()
+            self.queensPositions.append(contentsOf: self.tablero2.mReinas.r)
         }
+        
+        currGraphicsContext?.draw(queensLayer!, at: CGPoint(x: 0, y: 0))
     }
     
     /// We draw our black squares since white ones are provided by our background
