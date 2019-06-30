@@ -7,7 +7,6 @@ public protocol SolverDelegate: class{
 }
 
 public class UIBoard: UIView, SolutionDelegate {
-    var solve = false
     public var size = 8
     var tablero: Tablero!
     var tablero2: LocalSearchSolver!
@@ -22,6 +21,7 @@ public class UIBoard: UIView, SolutionDelegate {
         else{
             delegate?.done()
         }
+        
         self.setNeedsDisplay()
     }
     
@@ -39,7 +39,6 @@ public class UIBoard: UIView, SolutionDelegate {
     }
     
     public func initBoard(){
-        solve = true
         createBoard()
     }
     

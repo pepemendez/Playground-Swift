@@ -20,6 +20,7 @@ class MyViewController : UIViewController, SolverDelegate {
     }
     
     func done() {
+        print("solution found")
         button.isEnabled = true
         label.text = "Solution found!"
     }
@@ -64,7 +65,7 @@ class MyViewController : UIViewController, SolverDelegate {
     }
     
     @objc func buttonTapped() {
-        board.size = 8
+        board.size = 10
         board.delegate = self
         board.startSolver()
         board.setNeedsDisplay()

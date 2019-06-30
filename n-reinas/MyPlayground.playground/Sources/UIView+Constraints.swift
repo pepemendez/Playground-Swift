@@ -14,7 +14,7 @@ extension UIView {
     }
     
     public func placeAtTop(superView: UIView){
-        self.topAnchor.constraint(equalTo: superView.layoutMarginsGuide.topAnchor, constant: 0.0).isActive = true
+        self.topAnchor.constraint(equalTo: superView.layoutMarginsGuide.topAnchor, constant: 30.0).isActive = true
     }
     
     public func setWidth(constant: CGFloat = 120.0){
