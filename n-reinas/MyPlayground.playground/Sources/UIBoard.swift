@@ -11,7 +11,9 @@ public class UIBoard: UIView, SolutionDelegate {
     public var size = 8
     var tablero: Tablero!
     var tablero2: LocalSearchSolver!
-    
+    var blackSquare = [CGRect]()
+    var chessLayer: CGLayer?
+
     public weak var delegate: SolverDelegate?
     
     /// If we need to update our solutions
@@ -33,10 +35,18 @@ public class UIBoard: UIView, SolutionDelegate {
     
     /// We initialize and paint our things
     func board() {
+        let start = Date()
+
         let currGraphicsContext = UIGraphicsGetCurrentContext()
         
         drawChess(currGraphicsContext: currGraphicsContext)
         drawBorders(currGraphicsContext: currGraphicsContext)
+        drawQueens(currGraphicsContext: currGraphicsContext)
+        
+        let now = Date()
+        let time =  now.timeIntervalSince(start)
+        
+        delegate?.time(seconds: time)
     }
     
     public func initBoard(){
@@ -50,46 +60,27 @@ public class UIBoard: UIView, SolutionDelegate {
         tablero2.Solve()
     }
     
-    /// We draw our squares and we check if for some square there is a queen, if it's then we draw a circle
-    func drawChess(currGraphicsContext: CGContext?){
-        let start = Date()
-        
-        var black = [CGRect]()
+    /// We draw our circles
+    func drawQueens(currGraphicsContext: CGContext?){
         var reinas = tablero2.mReinas.r
         let width = self.frame.width/CGFloat(size)
-        for i in 0 ..< size {
-            let y = width*CGFloat(i)
-            
-            var j = i % 2
-            
-            repeat{
-                    black.append(CGRect(x: width*CGFloat(j),
-                                        y: y,
-                                        width: width,
-                                        height: width))
-                j += 2
-            } while j < size
-            
-        }
-        
-        currGraphicsContext?.setFillColor(UIColor.black.cgColor)
-        currGraphicsContext?.fill(black)
-        
-        currGraphicsContext?.setFillColor(UIColor.red.cgColor)
 
+        currGraphicsContext?.setFillColor(UIColor.red.cgColor)
+        
         for i in 0 ..< size {
             currGraphicsContext?.fillEllipse(in:
                 CGRect(x: width*CGFloat(reinas[i]),
                        y: width*CGFloat(i),
                        width: width,
                        height: width))
-            
         }
-        
-        let now = Date()
-        let time =  now.timeIntervalSince(start)
-        
-        delegate?.time(seconds: time)
+    }
+    
+    /// We draw our black squares since white ones are provided by our background
+    func drawChess(currGraphicsContext: CGContext?){
+        if let layer = self.getBlackSquares(currGraphicsContext: currGraphicsContext){
+            currGraphicsContext?.draw(layer, at: CGPoint(x: 0, y: 0))
+        }
     }
     
     /// We draw the outer borders for our chess board
@@ -116,6 +107,38 @@ public class UIBoard: UIView, SolutionDelegate {
         currGraphicsContext?.move(to: CGPoint(x: 0, y: self.frame.height)) // begin point
         currGraphicsContext?.addLine(to: CGPoint(x: self.frame.width, y: self.frame.height)) // end
         currGraphicsContext?.strokePath()
+    }
+    
+    func getBlackSquares(currGraphicsContext: CGContext?) -> CGLayer?{
+        let width = self.frame.width/CGFloat(size)
+        
+        if(blackSquare.count < 1){
+            for i in 0 ..< size {
+                let y = width*CGFloat(i)
+                
+                var j = i % 2
+                
+                repeat{
+                    blackSquare.append(CGRect(x: width*CGFloat(j),
+                                              y: y,
+                                              width: width,
+                                              height: width))
+                    j += 2
+                } while j < size
+                
+            }
+        }
+        
+        if(chessLayer == nil){
+            chessLayer = CGLayer(currGraphicsContext!, size: CGSize(width: self.frame.width, height: self.frame.height), auxiliaryInfo: nil)
+            
+            let layerContext = chessLayer?.context
+            
+            layerContext?.setFillColor(UIColor.black.cgColor)
+            layerContext?.fill(blackSquare)
+        }
+        
+        return chessLayer
     }
 
     override public func draw(_ rect: CGRect){
