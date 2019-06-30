@@ -7,9 +7,10 @@ public protocol SolverDelegate: class{
     func time(seconds: Double)
 }
 
+/// I tried to create clusters for our queens, at best for 250 queens our drawing time
+/// pass from 0.0005~ to 0.0001, isn't worthing
 public class UIBoard: UIView, SolutionDelegate {
     public var size = 8
-    var tablero: Tablero!
     var tablero2: LocalSearchSolver!
     var blackSquare = [CGRect]()
     var chessLayer: CGLayer?
