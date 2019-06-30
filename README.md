@@ -1,6 +1,10 @@
 # Playground-Swift
 
-N Queen problem:
 
-![Screenshot](n-reinas/start.png "End")
-![Screenshot](n-reinas/end.png "End")
+
+[N Queen problem solver using Local Search](../../tree/master/n-reinas)
+
+
+We show step by step every change that our local search algorithm does
+
+![Screenshot](n-reinas/screenshot.png)
