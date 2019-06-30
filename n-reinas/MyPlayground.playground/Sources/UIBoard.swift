@@ -58,7 +58,7 @@ public class UIBoard: UIView, SolutionDelegate {
         var black = [CGRect]()
         var reds = [CGRect]()
 
-        for i in 0 ..< size {
+        /*for i in 0 ..< size {
             for j in 0 ..< size {
                 if( (i + j) % 2 == 1 ){
                     black.append(CGRect(x: (self.frame.width/CGFloat(size))*CGFloat(j),
@@ -66,22 +66,22 @@ public class UIBoard: UIView, SolutionDelegate {
                                          width: self.frame.width/CGFloat(size),
                                          height: self.frame.width/CGFloat(size)))
                 }
-                                
-                if(tablero2.getTablero()[i][j] > 0){
-                    reds.append(CGRect(x: (self.frame.width/CGFloat(size))*CGFloat(j),
-                                       y: (self.frame.width/CGFloat(size))*CGFloat(i),
-                                       width: self.frame.width/CGFloat(size),
-                                       height: self.frame.width/CGFloat(size)))
-                    
-                }
-                
             }
+        }*/
+        
+        for i in 0 ..< size {
+            let j = tablero2.mReinas.r[i]
+            reds.append(CGRect(x: (self.frame.width/CGFloat(size))*CGFloat(j),
+                               y: (self.frame.width/CGFloat(size))*CGFloat(i),
+                               width: self.frame.width/CGFloat(size),
+                               height: self.frame.width/CGFloat(size)))
+                
         }
         
         //currGraphicsContext?.setFillColor(UIColor.white.cgColor)
         //currGraphicsContext?.fill(whites)
-        currGraphicsContext?.setFillColor(UIColor.black.cgColor)
-        currGraphicsContext?.fill(black)
+        //currGraphicsContext?.setFillColor(UIColor.black.cgColor)
+        //currGraphicsContext?.fill(black)
         currGraphicsContext?.setFillColor(UIColor.red.cgColor)
         currGraphicsContext?.fill(reds)
 
