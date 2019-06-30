@@ -5,9 +5,14 @@ import PlaygroundSupport
 
 class MyViewController : UIViewController, SolverDelegate {
     
+    var start = Date()
     let button = UIBackgroundButton(type: .system)
     let board = UIBoard()
     let label = UILabel()
+    
+    func time(seconds: Double) {
+        print("time \(seconds)")
+    }
     
     func running() {
         button.isEnabled = false
@@ -20,7 +25,9 @@ class MyViewController : UIViewController, SolverDelegate {
     }
     
     func done() {
-        print("solution found")
+        let now = Date()
+        let time =  now.timeIntervalSince(start)
+        print("solution found in \(time)")
         button.isEnabled = true
         label.text = "Solution found!"
     }
@@ -67,7 +74,7 @@ class MyViewController : UIViewController, SolverDelegate {
     }
     
     @objc func buttonTapped() {
-        board.size = 8
+        board.size = 30
         board.delegate = self
         board.startSolver()
         board.setNeedsDisplay()
