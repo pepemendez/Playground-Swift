@@ -52,33 +52,44 @@ public class UIBoard: UIView, SolutionDelegate {
     
     /// We draw our squares and we check if for some square there is a queen, if it's then we draw a circle
     func drawChess(currGraphicsContext: CGContext?){
-        var whites = [CGRect]()
+        let start = Date()
+        
         var black = [CGRect]()
-        var reds = [CGRect]()
-
+        var reinas = tablero2.mReinas.r
+        let width = self.frame.width/CGFloat(size)
         for i in 0 ..< size {
-            for j in 0 ..< size {
-                if( (i + j) % 2 == 1 ){
-                    black.append(CGRect(x: (self.frame.width/CGFloat(size))*CGFloat(j),
-                                         y: (self.frame.width/CGFloat(size))*CGFloat(i),
-                                         width: self.frame.width/CGFloat(size),
-                                         height: self.frame.width/CGFloat(size)))
-                }
-            }
+            let y = width*CGFloat(i)
+            
+            var j = i % 2
+            
+            repeat{
+                    black.append(CGRect(x: width*CGFloat(j),
+                                        y: y,
+                                        width: width,
+                                        height: width))
+                j += 2
+            } while j < size
+            
         }
+        
         currGraphicsContext?.setFillColor(UIColor.black.cgColor)
         currGraphicsContext?.fill(black)
         
+        currGraphicsContext?.setFillColor(UIColor.red.cgColor)
+
         for i in 0 ..< size {
-            let j = tablero2.mReinas.r[i]
-            currGraphicsContext?.setFillColor(UIColor.red.cgColor)
             currGraphicsContext?.fillEllipse(in:
-                CGRect(x: (self.frame.width/CGFloat(size))*CGFloat(j),
-                       y: (self.frame.width/CGFloat(size))*CGFloat(i),
-                       width: self.frame.width/CGFloat(size),
-                       height: self.frame.width/CGFloat(size)))
+                CGRect(x: width*CGFloat(reinas[i]),
+                       y: width*CGFloat(i),
+                       width: width,
+                       height: width))
             
         }
+        
+        let now = Date()
+        let time =  now.timeIntervalSince(start)
+        
+        delegate?.time(seconds: time)
     }
     
     /// We draw the outer borders for our chess board

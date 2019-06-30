@@ -15,6 +15,7 @@ class MyViewController : UIViewController, SolverDelegate {
     }
     
     func running() {
+        start = Date()
         button.isEnabled = false
         label.text = "Running..."
     }
@@ -47,7 +48,7 @@ class MyViewController : UIViewController, SolverDelegate {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: "buttonTapped", for: .touchUpInside)
 
-        board.size = 30
+        board.size = 250
         board.backgroundColor = UIColor.white
         board.isOpaque = true
         board.translatesAutoresizingMaskIntoConstraints = false
