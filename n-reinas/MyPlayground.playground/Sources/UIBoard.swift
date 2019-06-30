@@ -12,12 +12,11 @@ public protocol SolverDelegate: class{
 public class UIBoard: UIView, SolutionDelegate {
     public var size = 8
     var tablero2: LocalSearchSolver!
-    var blackSquare = [CGRect]()
     var chessLayer: CGLayer?
 
     public weak var delegate: SolverDelegate?
     
-    /// If we need to update our solutions
+    /// If we need to update our screen acording with our solutions
     public func improved() {
         if(tablero2.maxColisiones > 0){
             delegate?.improvement(f: tablero2.maxColisiones)
@@ -113,30 +112,22 @@ public class UIBoard: UIView, SolutionDelegate {
     func getBlackSquares(currGraphicsContext: CGContext?) -> CGLayer?{
         let width = self.frame.width/CGFloat(size)
         
-        if(blackSquare.count < 1){
+        if(chessLayer == nil){
+            var blackSquares = [CGRect]()
             for i in 0 ..< size {
                 let y = width*CGFloat(i)
                 
-                var j = i % 2
-                
-                repeat{
-                    blackSquare.append(CGRect(x: width*CGFloat(j),
-                                              y: y,
-                                              width: width,
-                                              height: width))
-                    j += 2
-                } while j < size
-                
+                for j in stride(from: i % 2, to: size, by: 2){
+                    blackSquares.append(CGRect(x: width*CGFloat(j), y: y, width: width, height: width))
+                }
             }
-        }
-        
-        if(chessLayer == nil){
+            
             chessLayer = CGLayer(currGraphicsContext!, size: CGSize(width: self.frame.width, height: self.frame.height), auxiliaryInfo: nil)
             
             let layerContext = chessLayer?.context
             
             layerContext?.setFillColor(UIColor.black.cgColor)
-            layerContext?.fill(blackSquare)
+            layerContext?.fill(blackSquares)
         }
         
         return chessLayer
