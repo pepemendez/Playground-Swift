@@ -30,6 +30,7 @@ public class nReinas {
         var raux = [Int]()
         raux.append(contentsOf: self.r)
         var ren = 0
+        
         while ren < self.num_reinas {
             var i = 1
             while (ren + i < self.num_reinas && raux[ren] + i < self.num_reinas) {

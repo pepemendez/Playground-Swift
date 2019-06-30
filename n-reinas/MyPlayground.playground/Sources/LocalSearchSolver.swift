@@ -59,7 +59,7 @@ public class LocalSearchSolver {
                 newUpdateTimer = 0
             }
             else{
-                newUpdateTimer = 10
+                newUpdateTimer = 0
             }
             
             // Stop the loop when the game is over

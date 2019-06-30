@@ -29,7 +29,8 @@ class MyViewController : UIViewController, SolverDelegate {
     override func loadView() {
         let view = UIView()
         view.backgroundColor = .white
-
+        view.isOpaque = true
+        
         label.textColor = UIColor.black
         label.text = "Click to start a new one"
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -40,6 +41,7 @@ class MyViewController : UIViewController, SolverDelegate {
         button.addTarget(self, action: "buttonTapped", for: .touchUpInside)
 
         board.backgroundColor = UIColor.white
+        board.isOpaque = true
         board.translatesAutoresizingMaskIntoConstraints = false
         
         view.addSubview(label)
@@ -65,7 +67,7 @@ class MyViewController : UIViewController, SolverDelegate {
     }
     
     @objc func buttonTapped() {
-        board.size = 10
+        board.size = 8
         board.delegate = self
         board.startSolver()
         board.setNeedsDisplay()
