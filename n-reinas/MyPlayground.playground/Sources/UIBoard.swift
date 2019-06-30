@@ -52,33 +52,44 @@ public class UIBoard: UIView, SolutionDelegate {
     
     /// We draw our squares and we check if for some square there is a queen, if it's then we draw a circle
     func drawChess(currGraphicsContext: CGContext?){
+        
+        var whites = [CGRect]()
+        var black = [CGRect]()
+        var reds = [CGRect]()
+
         for i in 0 ..< size {
             for j in 0 ..< size {
                 if( (i + j) % 2 == 0 ){
-                    currGraphicsContext?.setFillColor(UIColor.white.cgColor)
+                    whites.append(CGRect(x: (self.frame.width/CGFloat(size))*CGFloat(j),
+                                         y: (self.frame.width/CGFloat(size))*CGFloat(i),
+                                         width: self.frame.width/CGFloat(size),
+                                         height: self.frame.width/CGFloat(size)))
                 }
                 else{
-                    currGraphicsContext?.setFillColor(UIColor.black.cgColor)
+                    black.append(CGRect(x: (self.frame.width/CGFloat(size))*CGFloat(j),
+                                        y: (self.frame.width/CGFloat(size))*CGFloat(i),
+                                        width: self.frame.width/CGFloat(size),
+                                        height: self.frame.width/CGFloat(size)))
                 }
-                
-                currGraphicsContext?.fill(CGRect(x: (self.frame.width/CGFloat(size))*CGFloat(j),
-                                                 y: (self.frame.width/CGFloat(size))*CGFloat(i),
-                                                 width: self.frame.width/CGFloat(size),
-                                                 height: self.frame.width/CGFloat(size)))
-                
+                                
                 if(tablero2.getTablero()[i][j] > 0){
-                    currGraphicsContext?.setFillColor(UIColor.red.cgColor)
-                    
-                    currGraphicsContext?.fillEllipse(in: CGRect(x: (self.frame.width/CGFloat(size))*CGFloat(j),
-                                                                y: (self.frame.width/CGFloat(size))*CGFloat(i),
-                                                                width: self.frame.width/CGFloat(size),
-                                                                height: self.frame.width/CGFloat(size)))
+                    reds.append(CGRect(x: (self.frame.width/CGFloat(size))*CGFloat(j),
+                                       y: (self.frame.width/CGFloat(size))*CGFloat(i),
+                                       width: self.frame.width/CGFloat(size),
+                                       height: self.frame.width/CGFloat(size)))
                     
                 }
                 
             }
         }
         
+        //currGraphicsContext?.setFillColor(UIColor.white.cgColor)
+        //currGraphicsContext?.fill(whites)
+        currGraphicsContext?.setFillColor(UIColor.black.cgColor)
+        currGraphicsContext?.fill(black)
+        currGraphicsContext?.setFillColor(UIColor.red.cgColor)
+        currGraphicsContext?.fill(reds)
+
     }
     
     /// We draw the outer borders for our chess board
