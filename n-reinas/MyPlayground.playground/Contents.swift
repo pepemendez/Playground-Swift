@@ -20,7 +20,7 @@ class MyViewController : UIViewController, SolverDelegate {
     }
     
     func improvement(f: Int) {
-        print("solution: \(f)")
+        //print("solution: \(f)")
         label.text = "Current solution: \(f)"
     }
     
@@ -39,7 +39,7 @@ class MyViewController : UIViewController, SolverDelegate {
         view.isOpaque = true
         
         label.textColor = UIColor.black
-        label.text = "Click to start a new one"
+        label.text = "Click to solve"
         label.translatesAutoresizingMaskIntoConstraints = false
         
         button.tintColor = UIColor.white
@@ -47,6 +47,7 @@ class MyViewController : UIViewController, SolverDelegate {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: "buttonTapped", for: .touchUpInside)
 
+        board.size = 30
         board.backgroundColor = UIColor.white
         board.isOpaque = true
         board.translatesAutoresizingMaskIntoConstraints = false
@@ -74,7 +75,6 @@ class MyViewController : UIViewController, SolverDelegate {
     }
     
     @objc func buttonTapped() {
-        board.size = 30
         board.delegate = self
         board.startSolver()
         board.setNeedsDisplay()
