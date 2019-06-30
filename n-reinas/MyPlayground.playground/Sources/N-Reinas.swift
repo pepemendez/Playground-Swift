@@ -38,12 +38,10 @@ public class nReinas {
                 }
                 i += 1;
             }
-        }
-        
-        for ren2 in 0 ..< self.num_reinas {
+            
             var i2 = 1;
-            while (ren2 + i2 < self.num_reinas && raux[ren2] - i2 >= 0) {
-                if (raux[ren2 + i2] == raux[ren2] - i2) {
+            while (ren + i2 < self.num_reinas && raux[ren] - i2 >= 0) {
+                if (raux[ren + i2] == raux[ren] - i2) {
                     indicador += 1;
                 }
                 i2 += 1;
