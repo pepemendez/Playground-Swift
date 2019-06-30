@@ -27,7 +27,12 @@ public class LocalSearchSolver {
     /// We implement our local search
     func LocalSearch() {
         let indice1 = Int.random(in: 0 ..< self.mReinas.num_reinas)
-        let indice2 = Int.random(in: 0 ..< self.mReinas.num_reinas)
+        
+        var indice2 = Int.random(in: 0 ..< self.mReinas.num_reinas)
+        
+        while indice1 == indice2 {
+            indice2 = Int.random(in: 0 ..< self.mReinas.num_reinas)
+        }
 
         self.mReinas.r.swapAt(indice1, indice2)
         

@@ -46,7 +46,7 @@ public class UIBoard: UIView, SolutionDelegate {
     
     /// We initialize and paint our things
     func board() {
-        let start = Date()
+        //let start = Date()
 
         let currGraphicsContext = UIGraphicsGetCurrentContext()
         
@@ -54,10 +54,10 @@ public class UIBoard: UIView, SolutionDelegate {
         drawQueens(currGraphicsContext: currGraphicsContext)
         drawBorders(currGraphicsContext: currGraphicsContext)
 
-        let now = Date()
+        /*let now = Date()
         let time =  now.timeIntervalSince(start)
         
-        delegate?.time(seconds: time)
+        delegate?.time(seconds: time)*/
     }
     
     public func initBoard(){

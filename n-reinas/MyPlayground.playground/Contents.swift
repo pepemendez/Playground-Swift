@@ -47,7 +47,7 @@ class MyViewController : UIViewController, SolverDelegate {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: "buttonTapped", for: .touchUpInside)
 
-        board.size = 250
+        board.size = 30
         board.backgroundColor = UIColor.white
         board.isOpaque = true
         board.translatesAutoresizingMaskIntoConstraints = false
