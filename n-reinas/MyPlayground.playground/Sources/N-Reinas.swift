@@ -29,9 +29,8 @@ public class nReinas {
         var indicador = 0
         var raux = [Int]()
         raux.append(contentsOf: self.r)
-        var ren = 0
         
-        while ren < self.num_reinas {
+        for ren in 0 ..< self.num_reinas {
             var i = 1
             while (ren + i < self.num_reinas && raux[ren] + i < self.num_reinas) {
                 if (raux[ren + i] == raux[ren] + i) {
@@ -39,11 +38,9 @@ public class nReinas {
                 }
                 i += 1;
             }
-            ren += 1;
         }
         
-        var ren2 = 0;
-        while ren2 < self.num_reinas {
+        for ren2 in 0 ..< self.num_reinas {
             var i2 = 1;
             while (ren2 + i2 < self.num_reinas && raux[ren2] - i2 >= 0) {
                 if (raux[ren2 + i2] == raux[ren2] - i2) {
@@ -51,8 +48,8 @@ public class nReinas {
                 }
                 i2 += 1;
             }
-            ren2 += 1;
         }
+        
         return indicador;
     }
     
