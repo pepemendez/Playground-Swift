@@ -29,49 +29,47 @@ public class LocalSearchSolver {
         let indice1 = Int.random(in: 0 ..< self.mReinas.num_reinas)
         let indice2 = Int.random(in: 0 ..< self.mReinas.num_reinas)
         
-        print(self.mReinas.r)
         self.mReinas.r.swapAt(indice1, indice2)
-        print(self.mReinas.r)
-
-        //swap(&self.mReinas.r[indice1], &self.mReinas.r[indice2])
         
         let colision = self.mReinas.Colision()
-        
         ///If we didn't improve then we just revert everything
         ///If it improve then we update our colision counter
         if(colision > maxColisiones){
-            print("revert \(colision) > \(maxColisiones)")
             self.mReinas.r.swapAt(indice1, indice2)
-            
-            //swap(&self.mReinas.r[indice1], &self.mReinas.r[indice2])
         }
         else{
-            maxColisiones = colision
+            self.maxColisiones = colision
+            self.delegate?.improved()
         }
         
     }
     
-    public func Solve(){
+    public func RunLoop(millisecs: Int){
         var colisiones = self.maxColisiones
+        var newUpdateTimer = millisecs
         
-        repeat {
-            print(colisiones)
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(millisecs)) {
+            self.LocalSearch()
             
-            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: {
-                // Put your code which should be executed with a delay here
-                self.LocalSearch()
-            })
-            
-            print("LocalSearch")
-            
-            if(colisiones > maxColisiones){
-                print("improved")
-                colisiones = maxColisiones
-                DispatchQueue.main.async{
-                    // Put your code which should be executed with a delay here
-                    self.delegate?.improved()
-                }
+            //We want to know if something happend
+            if(colisiones > self.maxColisiones){
+                colisiones = self.maxColisiones
+                //If improved next step is going to take more normal lenght in order to see
+                //our changes
+                newUpdateTimer = 0
             }
-        } while maxColisiones > 0
+            else{
+                newUpdateTimer = 10
+            }
+            
+            // Stop the loop when the game is over
+            if (self.maxColisiones > 0) {
+                self.RunLoop(millisecs: newUpdateTimer)
+            }
+        }
+    }
+    
+    public func Solve(){
+        RunLoop(millisecs: 500)
     }
 }

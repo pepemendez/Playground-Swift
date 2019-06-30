@@ -1,36 +1,53 @@
 import UIKit
 
+public protocol SolverDelegate: class{
+    func running()
+    func improvement(f: Int)
+    func done()
+}
+
 public class UIBoard: UIView, SolutionDelegate {
     var solve = false
     public var size = 8
     var tablero: Tablero!
     var tablero2: LocalSearchSolver!
     
+    public weak var delegate: SolverDelegate?
+    
     /// If we need to update our solutions
     public func improved() {
+        if(tablero2.maxColisiones > 0){
+            delegate?.improvement(f: tablero2.maxColisiones)
+        }
+        else{
+            delegate?.done()
+        }
         self.setNeedsDisplay()
     }
     
     /// If we need to set our board and put our queens in place
     func createBoard(){
-        self.tablero = Tablero(tamaño: size)
         self.tablero2 = LocalSearchSolver(reinas: size, delegate: self)
     }
     
     /// We initialize and paint our things
     func board() {
-        if(!solve){
-            createBoard()
-            solve = true
-        }
-        else{
-            tablero2.Solve()
-        }
-        
         let currGraphicsContext = UIGraphicsGetCurrentContext()
         
         drawChess(currGraphicsContext: currGraphicsContext)
         drawBorders(currGraphicsContext: currGraphicsContext)
+    }
+    
+    public func initBoard(){
+        solve = true
+        createBoard()
+    }
+    
+    public func startSolver(){
+        print("Starting solver")
+        delegate?.running()
+        createBoard()
+        tablero2.Solve()
     }
     
     

@@ -13,6 +13,10 @@ extension UIView {
         self.bottomAnchor.constraint(equalTo: superView.layoutMarginsGuide.bottomAnchor, constant: -30.0).isActive = true
     }
     
+    public func placeAtTop(superView: UIView){
+        self.topAnchor.constraint(equalTo: superView.layoutMarginsGuide.topAnchor, constant: 0.0).isActive = true
+    }
+    
     public func setWidth(constant: CGFloat = 120.0){
         self.widthAnchor.constraint(equalToConstant: constant).isActive = true
     }

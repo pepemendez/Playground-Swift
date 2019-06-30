@@ -3,14 +3,36 @@
 import UIKit
 import PlaygroundSupport
 
-class MyViewController : UIViewController {
+class MyViewController : UIViewController, SolverDelegate {
+    
     let button = UIBackgroundButton(type: .system)
     let board = UIBoard()
+    let label = UILabel()
+    
+    func running() {
+        button.isEnabled = false
+        label.text = "Running..."
+    }
+    
+    func improvement(f: Int) {
+        print("solution: \(f)")
+        label.text = "Current solution: \(f)"
+    }
+    
+    func done() {
+        button.isEnabled = true
+        label.text = "Solution found!"
+    }
+
 
     override func loadView() {
         let view = UIView()
         view.backgroundColor = .white
 
+        label.textColor = UIColor.black
+        label.text = "Click to start a new one"
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
         button.tintColor = UIColor.white
         button.backgroundColor = UIColor.blue
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -18,10 +40,16 @@ class MyViewController : UIViewController {
 
         board.backgroundColor = UIColor.white
         board.translatesAutoresizingMaskIntoConstraints = false
+        
+        view.addSubview(label)
         view.addSubview(button)
         view.addSubview(board)
 
-        button.setTitle("Click!", for: .normal)
+        label.centerHorizontal(superView: view)
+        label.placeAtTop(superView: view)
+        
+        button.setTitle("Solve!", for: .normal)
+        button.setTitle("Running!", for: .disabled)
         button.placeAtBottom(superView: view)
         button.centerHorizontal(superView: view)
         button.setWidth()
@@ -30,12 +58,15 @@ class MyViewController : UIViewController {
         board.centerHorizontal(superView: view)
         board.setWidth(constant: 300)
         board.setHeight(constant: 300)
+        board.initBoard()
         
         self.view = view
     }
     
     @objc func buttonTapped() {
         board.size = 8
+        board.delegate = self
+        board.startSolver()
         board.setNeedsDisplay()
     }
 }
