@@ -8,18 +8,7 @@ public protocol SolverDelegate: class{
     func time(seconds: Double)
 }
 
-public class UIBoard: UIView, SolutionDelegate {
-    public var size = 8
-    var solver: LocalSearchSolver!
-    var chessLayer: CGLayer?
-    var queensLayer: CGLayer?
-    var queensPositions: [Int]!
-    
-    var point1: Int!
-    var point2: Int!
-    
-    public weak var delegate: SolverDelegate?
-    
+extension UIBoard: SolutionDelegate{
     /// If we need to update our screen acording with our solutions
     public func improved(point1: Int, point2: Int) {
         
@@ -35,6 +24,19 @@ public class UIBoard: UIView, SolutionDelegate {
         
         self.setNeedsDisplay()
     }
+}
+
+public class UIBoard: UIView {
+    public var size = 8
+    var solver: LocalSearchSolver!
+    var chessLayer: CGLayer?
+    var queensLayer: CGLayer?
+    var queensPositions: [Int]!
+    
+    var point1: Int!
+    var point2: Int!
+    
+    public weak var delegate: SolverDelegate?
     
     /// If we need to set our board and put our queens in place
     func createBoard(){

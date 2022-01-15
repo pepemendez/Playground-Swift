@@ -10,26 +10,33 @@ extension MyViewController: SolverDelegate {
     
     func running() {
         start = Date()
-        button.isEnabled = false
-        label.text = "Running..."
+        mainView.changeState(state: .running)
     }
     
     func improvement(f: Int) {
-        label.text = "Current solution: \(f)"
+        mainView.printMessage(msg: "Current solution: \(f)")
     }
     
     func done() {
-        let now = Date()
-        let time =  now.timeIntervalSince(start)
+        let time =   Date().timeIntervalSince(start)
         print("solution found in \(time)")
-        button.isEnabled = true
-        label.text = "Solution found!"
+        
+        mainView.changeState(state: .solved)
+    }
+}
+ 
+extension MyViewController: MainInterfaceDelegate {
+    func startButtonTapped() {
+        board.startSolver()
+        board.setNeedsDisplay()
     }
 }
 
 class MyViewController : UIViewController {
     
     var start = Date()
+    var mainView: UIReinas!
+    
     let board: UIBoard = {
         let board = UIBoard()
         board.backgroundColor = UIColor.white
@@ -37,62 +44,28 @@ class MyViewController : UIViewController {
         board.translatesAutoresizingMaskIntoConstraints = false
         return board
     }()
-    let button: UIBackgroundButton = {
-        let button = UIBackgroundButton(type: .system)
-        button.tintColor = UIColor.white
-        button.backgroundColor = UIColor.blue
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Solve!", for: .normal)
-        button.setTitle("Running!", for: .disabled)
-        return button
-    }()
-    let label: UILabel = {
-        let label = UILabel()
-        label.textColor = UIColor.black
-        label.text = "Click to solve"
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
     
     override func viewDidLoad(){
         board.size = 12
         board.initBoard()
         
         board.delegate = self
-        button.addTarget(self, action:#selector(self.buttonTapped), for: .touchUpInside )
-    }
-    
-    @objc func buttonTapped() {
-        board.startSolver()
-        board.setNeedsDisplay()
     }
 
     override func loadView() {
-        let view = UIView()
-        view.backgroundColor = .white
-        view.isOpaque = true
-        view.addSubview(label)
-        view.addSubview(button)
-        view.addSubview(board)
-        
-        setContraints(view)
-
-        self.view = view
+        mainView = UIReinas(delegate: self)
+        mainView.addSubview(board)
+        setContraints(mainView)
+        self.view = mainView
     }
     
     func setContraints(_ view: UIView){
-        label.centerHorizontal(superView: view)
-        label.placeAtTop(superView: view)
-        
-        button.placeAtBottom(superView: view)
-        button.centerHorizontal(superView: view)
-        button.setWidth()
-        
         board.centerVertical(superView: view)
         board.centerHorizontal(superView: view)
         board.setWidth(constant: 300)
         board.setHeight(constant: 300)
     }
+    
 }
 
 // Present the view controller in the Live View window
