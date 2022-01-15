@@ -1,4 +1,5 @@
 import UIKit
+import CoreGraphics
 
 public protocol SolverDelegate: class{
     func running()
@@ -9,7 +10,7 @@ public protocol SolverDelegate: class{
 
 public class UIBoard: UIView, SolutionDelegate {
     public var size = 8
-    var tablero2: LocalSearchSolver!
+    var solver: LocalSearchSolver!
     var chessLayer: CGLayer?
     var queensLayer: CGLayer?
     var queensPositions: [Int]!
@@ -25,8 +26,8 @@ public class UIBoard: UIView, SolutionDelegate {
         self.point1 = point1
         self.point2 = point2
         
-        if(tablero2.maxColisiones > 0){
-            delegate?.improvement(f: tablero2.maxColisiones)
+        if(solver.maxColisiones > 0){
+            delegate?.improvement(f: solver.maxColisiones)
         }
         else{
             delegate?.done()
@@ -37,11 +38,11 @@ public class UIBoard: UIView, SolutionDelegate {
     
     /// If we need to set our board and put our queens in place
     func createBoard(){
-        self.tablero2 = LocalSearchSolver(reinas: size, delegate: self)
+        self.solver = LocalSearchSolver(reinas: size, delegate: self)
         queensPositions = [Int]()
         queensLayer = nil
 
-        queensPositions.append(contentsOf: self.tablero2.mReinas.r)
+        queensPositions.append(contentsOf: self.solver.mReinas.r)
     }
     
     /// We initialize and paint our things
@@ -68,17 +69,15 @@ public class UIBoard: UIView, SolutionDelegate {
         print("Starting solver")
         delegate?.running()
         createBoard()
-        tablero2.Solve()
+        solver.Solve()
     }
     
     /// We draw our circles
     func drawQueens(currGraphicsContext: CGContext?){
         //UIImage *image = [UIImage imageNamed:@"Queen.png"];
         let queenPng = #imageLiteral(resourceName: "Queen.png")
-        let reinas = tablero2.mReinas.r
+        let reinas = solver.mReinas.r
         let width = self.frame.width/CGFloat(size)
-
-        currGraphicsContext?.setFillColor(UIColor.green.cgColor)
         
         if(queensLayer == nil){
             print("queensLayer nil")
@@ -88,26 +87,7 @@ public class UIBoard: UIView, SolutionDelegate {
             layerContext?.setFillColor(UIColor.red.cgColor)
             
             for i in 0 ..< size {
-                
-                layerContext?.fillEllipse(in:
-                    CGRect(x: width*CGFloat(reinas[i]),
-                           y: width*CGFloat(i),
-                           width: width,
-                           height: width))
-                
-                
-                
-                if let context = layerContext{
-                    UIGraphicsPushContext(context);
-                    
-                    queenPng.draw(in: CGRect(x:width*CGFloat(reinas[i]),
-                                               y: width*CGFloat(i),
-                                               width: width,
-                                               height: width))
-                    
-                    UIGraphicsPopContext();
-
-                }
+                drawQueen(currGraphicsContext: layerContext, queen: queenPng, x: reinas[i], y: i)
             }
         }
         else{
@@ -115,53 +95,40 @@ public class UIBoard: UIView, SolutionDelegate {
             
             layerContext?.setFillColor(UIColor.red.cgColor)
             
+            //We remove our previous positions
             layerContext?.clear(CGRect(x: width*CGFloat(queensPositions[point1]), y: width*CGFloat(point1), width: width, height: width))
-            
-       
-            layerContext?.fillEllipse(in:
-                CGRect(x: width*CGFloat(reinas[point1]),
-                       y: width*CGFloat(point1),
-                       width: width,
-                       height: width))
-
-            if let context = layerContext{
-                UIGraphicsPushContext(context);
-                
-                queenPng.draw(in: CGRect(x:width*CGFloat(reinas[point1]),
-                                           y: width*CGFloat(point1),
-                                           width: width,
-                                           height: width))
-                
-                UIGraphicsPopContext();
-
-            }
-            
-            
             layerContext?.clear(CGRect(x: width*CGFloat(queensPositions[point2]), y: width*CGFloat(point2), width: width, height: width))
             
-            layerContext?.fillEllipse(in:
-                CGRect(x: width*CGFloat(reinas[point2]),
-                       y: width*CGFloat(point2),
-                       width: width,
-                       height: width))
             
-            if let context = layerContext{
-                UIGraphicsPushContext(context);
-                
-                queenPng.draw(in: CGRect(x:width*CGFloat(reinas[point2]),
-                                           y: width*CGFloat(point2),
-                                           width: width,
-                                           height: width))
-                
-                UIGraphicsPopContext();
-
-            }
+            //We draw our new positions
+            drawQueen(currGraphicsContext: layerContext, queen: queenPng, x: reinas[point1], y: point1)
+            drawQueen(currGraphicsContext: layerContext, queen: queenPng, x: reinas[point2], y: point2)
             
+            //We update our new positions
             self.queensPositions.removeAll()
-            self.queensPositions.append(contentsOf: self.tablero2.mReinas.r)
+            self.queensPositions.append(contentsOf: self.solver.mReinas.r)
         }
         
         currGraphicsContext?.draw(queensLayer!, at: CGPoint(x: 0, y: 0))
+    }
+    
+    func drawQueen(currGraphicsContext: CGContext?,queen: UIImage, x: Int, y: Int){
+        let width = self.frame.width/CGFloat(size)
+
+        //We draw our background
+        currGraphicsContext?.fillEllipse(in:
+            CGRect(x: width*CGFloat(x), y: width*CGFloat(y), width: width, height: width))
+        
+        //We draw our queen
+
+        if let context = currGraphicsContext{
+            UIGraphicsPushContext(context);
+            
+            queen.draw(in: CGRect(x:width*CGFloat(x), y: width*CGFloat(y), width: width, height: width))
+            
+            UIGraphicsPopContext();
+
+        }
     }
     
     /// We draw our black squares since white ones are provided by our background
