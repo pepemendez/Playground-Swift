@@ -53,29 +53,6 @@ class MyViewController : UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-
-    override func loadView() {
-        let view = UIView()
-        view.backgroundColor = .white
-        view.isOpaque = true
-        view.addSubview(label)
-        view.addSubview(button)
-        view.addSubview(board)
-        
-        label.centerHorizontal(superView: view)
-        label.placeAtTop(superView: view)
-        
-        button.placeAtBottom(superView: view)
-        button.centerHorizontal(superView: view)
-        button.setWidth()
-        
-        board.centerVertical(superView: view)
-        board.centerHorizontal(superView: view)
-        board.setWidth(constant: 300)
-        board.setHeight(constant: 300)
-
-        self.view = view
-    }
     
     override func viewDidLoad(){
         board.size = 12
@@ -88,6 +65,33 @@ class MyViewController : UIViewController {
     @objc func buttonTapped() {
         board.startSolver()
         board.setNeedsDisplay()
+    }
+
+    override func loadView() {
+        let view = UIView()
+        view.backgroundColor = .white
+        view.isOpaque = true
+        view.addSubview(label)
+        view.addSubview(button)
+        view.addSubview(board)
+        
+        setContraints(view)
+
+        self.view = view
+    }
+    
+    func setContraints(_ view: UIView){
+        label.centerHorizontal(superView: view)
+        label.placeAtTop(superView: view)
+        
+        button.placeAtBottom(superView: view)
+        button.centerHorizontal(superView: view)
+        button.setWidth()
+        
+        board.centerVertical(superView: view)
+        board.centerHorizontal(superView: view)
+        board.setWidth(constant: 300)
+        board.setHeight(constant: 300)
     }
 }
 
