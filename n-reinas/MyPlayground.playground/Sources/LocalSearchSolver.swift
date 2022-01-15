@@ -1,23 +1,27 @@
 import UIKit
 
 public protocol SolutionDelegate: class {
-    func improved(point1: Int, point2: Int)
+    func runningSolver()
+    func improved(point1: Int, point2: Int, current: [Int])
 }
 
 public class LocalSearchSolver {
     var timeStart: Date
-    var mReinas: nReinas
-    var maxColisiones: Int
+    public private(set) var mReinas: nReinas
+    public private(set) var maxColisiones: Int
+    public var currentSolution: [Int] {
+        return mReinas.r
+    }
+
     
     weak var delegate: SolutionDelegate?
     
-    init(reinas: Int, delegate: SolutionDelegate) {
+    public init(reinas: Int, delegate: SolutionDelegate) {
         self.timeStart = Date()
         self.mReinas = nReinas(num_reinas: reinas)
         self.maxColisiones = mReinas.Colision()
         self.delegate = delegate
     }
-    
     
     /// We need this function
     public func getTablero() -> [[Int]] {
@@ -45,7 +49,7 @@ public class LocalSearchSolver {
         }
         else{
             self.maxColisiones = colision
-            self.delegate?.improved(point1: indice1, point2: indice2)
+            self.delegate?.improved(point1: indice1, point2: indice2, current: self.mReinas.r)
         }
         
     }
@@ -76,6 +80,7 @@ public class LocalSearchSolver {
     }
     
     public func Solve(){
+        delegate?.runningSolver()
         RunLoop(millisecs: 500)
     }
 }

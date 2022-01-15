@@ -24,11 +24,31 @@ extension MyViewController: SolverDelegate {
         mainView.changeState(state: .solved)
     }
 }
+
+extension MyViewController: SolutionDelegate {
+    func runningSolver() {
+        start = Date()
+        mainView.changeState(state: .running)
+    }
+    
+    func improved(point1: Int, point2: Int, current: [Int]) {
+        board.improved(point1: point1, point2: point2, current: current)
+        
+        if(solver.maxColisiones > 0){
+                   improvement(f: solver.maxColisiones)
+               }
+       else{
+           done()
+       }
+    }
+}
  
 extension MyViewController: MainInterfaceDelegate {
     func startButtonTapped() {
-        board.startSolver()
+        self.solver = LocalSearchSolver(reinas: 20, delegate: self)
+        board.initBoard(positions: self.solver.currentSolution)
         board.setNeedsDisplay()
+        solver.Solve()
     }
 }
 
@@ -36,7 +56,12 @@ class MyViewController : UIViewController {
     
     var start = Date()
     var mainView: UIReinas!
+    var solver: LocalSearchSolver!
     
+    public func solverFinished() -> Bool{
+        return solver.maxColisiones > 0
+    }
+
     let board: UIBoard = {
         let board = UIBoard()
         board.backgroundColor = UIColor.white
@@ -46,9 +71,8 @@ class MyViewController : UIViewController {
     }()
     
     override func viewDidLoad(){
-        board.size = 12
-        board.initBoard()
-        
+        self.solver = LocalSearchSolver(reinas: 12, delegate: self)
+        board.initBoard(positions: self.solver.currentSolution)
         board.delegate = self
     }
 

@@ -8,43 +8,32 @@ public protocol SolverDelegate: class{
     func time(seconds: Double)
 }
 
-extension UIBoard: SolutionDelegate{
-    /// If we need to update our screen acording with our solutions
-    public func improved(point1: Int, point2: Int) {
-        
-        self.point1 = point1
-        self.point2 = point2
-        
-        if(solver.maxColisiones > 0){
-            delegate?.improvement(f: solver.maxColisiones)
-        }
-        else{
-            delegate?.done()
-        }
-        
-        self.setNeedsDisplay()
-    }
-}
-
 public class UIBoard: UIView {
-    public var size = 8
-    var solver: LocalSearchSolver!
+    //public var size = 8
     var chessLayer: CGLayer?
     var queensLayer: CGLayer?
     var queensPositions: [Int]!
-    
+    var current: [Int]!
     var point1: Int!
     var point2: Int!
     
     public weak var delegate: SolverDelegate?
     
+    public func improved(point1: Int, point2: Int, current: [Int]) {
+        self.point1 = point1
+        self.point2 = point2
+        self.current = current
+        
+        self.setNeedsDisplay()
+    }
+    
     /// If we need to set our board and put our queens in place
-    func createBoard(){
-        self.solver = LocalSearchSolver(reinas: size, delegate: self)
-        queensPositions = [Int]()
+    func createBoard(positions: [Int]){
+        current = positions
         queensLayer = nil
 
-        queensPositions.append(contentsOf: self.solver.mReinas.r)
+        queensPositions = [Int]()
+        queensPositions.append(contentsOf: positions)
     }
     
     /// We initialize and paint our things
@@ -63,22 +52,18 @@ public class UIBoard: UIView {
         delegate?.time(seconds: time)*/
     }
     
-    public func initBoard(){
-        createBoard()
-    }
-    
-    public func startSolver(){
-        print("Starting solver")
-        delegate?.running()
-        createBoard()
-        solver.Solve()
+    public func initBoard(positions: [Int]){
+        chessLayer = nil
+        createBoard(positions: positions)
     }
     
     /// We draw our circles
     func drawQueens(currGraphicsContext: CGContext?){
-        //UIImage *image = [UIImage imageNamed:@"Queen.png"];
+        guard let current = self.current else { return }
+
         let queenPng = #imageLiteral(resourceName: "Queen.png")
-        let reinas = solver.mReinas.r
+        let reinas = current
+        let size = current.count
         let width = self.frame.width/CGFloat(size)
         
         if(queensLayer == nil){
@@ -108,13 +93,14 @@ public class UIBoard: UIView {
             
             //We update our new positions
             self.queensPositions.removeAll()
-            self.queensPositions.append(contentsOf: self.solver.mReinas.r)
+            self.queensPositions.append(contentsOf: self.current)
         }
         
         currGraphicsContext?.draw(queensLayer!, at: CGPoint(x: 0, y: 0))
     }
     
     func drawQueen(currGraphicsContext: CGContext?,queen: UIImage, x: Int, y: Int){
+        let size = self.current.count
         let width = self.frame.width/CGFloat(size)
 
         //We draw our background
@@ -167,6 +153,7 @@ public class UIBoard: UIView {
     }
     
     func getBlackSquares(currGraphicsContext: CGContext?) -> CGLayer?{
+        let size = self.current.count
         let width = self.frame.width/CGFloat(size)
         
         if(chessLayer == nil){
