@@ -3,13 +3,7 @@
 import UIKit
 import PlaygroundSupport
 
-class MyViewController : UIViewController, SolverDelegate {
-    
-    var start = Date()
-    let button = UIBackgroundButton(type: .system)
-    let board = UIBoard()
-    let label = UILabel()
-    
+extension MyViewController: SolverDelegate {
     func time(seconds: Double) {
         print("time \(seconds)")
     }
@@ -31,36 +25,46 @@ class MyViewController : UIViewController, SolverDelegate {
         button.isEnabled = true
         label.text = "Solution found!"
     }
+}
 
+class MyViewController : UIViewController {
+    
+    var start = Date()
+    let board: UIBoard = {
+        let board = UIBoard()
+        board.backgroundColor = UIColor.white
+        board.isOpaque = true
+        board.translatesAutoresizingMaskIntoConstraints = false
+        return board
+    }()
+    let button: UIBackgroundButton = {
+        let button = UIBackgroundButton(type: .system)
+        button.tintColor = UIColor.white
+        button.backgroundColor = UIColor.blue
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle("Solve!", for: .normal)
+        button.setTitle("Running!", for: .disabled)
+        return button
+    }()
+    let label: UILabel = {
+        let label = UILabel()
+        label.textColor = UIColor.black
+        label.text = "Click to solve"
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
 
     override func loadView() {
         let view = UIView()
         view.backgroundColor = .white
         view.isOpaque = true
-        
-        label.textColor = UIColor.black
-        label.text = "Click to solve"
-        label.translatesAutoresizingMaskIntoConstraints = false
-        
-        button.tintColor = UIColor.white
-        button.backgroundColor = UIColor.blue
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(self, action: "buttonTapped", for: .touchUpInside)
-
-        board.size = 12
-        board.backgroundColor = UIColor.white
-        board.isOpaque = true
-        board.translatesAutoresizingMaskIntoConstraints = false
-        
         view.addSubview(label)
         view.addSubview(button)
         view.addSubview(board)
-
+        
         label.centerHorizontal(superView: view)
         label.placeAtTop(superView: view)
         
-        button.setTitle("Solve!", for: .normal)
-        button.setTitle("Running!", for: .disabled)
         button.placeAtBottom(superView: view)
         button.centerHorizontal(superView: view)
         button.setWidth()
@@ -69,13 +73,19 @@ class MyViewController : UIViewController, SolverDelegate {
         board.centerHorizontal(superView: view)
         board.setWidth(constant: 300)
         board.setHeight(constant: 300)
-        board.initBoard()
-        
+
         self.view = view
     }
     
-    @objc func buttonTapped() {
+    override func viewDidLoad(){
+        board.size = 12
+        board.initBoard()
+        
         board.delegate = self
+        button.addTarget(self, action:#selector(self.buttonTapped), for: .touchUpInside )
+    }
+    
+    @objc func buttonTapped() {
         board.startSolver()
         board.setNeedsDisplay()
     }
