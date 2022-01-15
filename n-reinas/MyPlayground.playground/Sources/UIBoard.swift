@@ -53,7 +53,7 @@ public class UIBoard: UIView, SolutionDelegate {
         drawChess(currGraphicsContext: currGraphicsContext)
         drawQueens(currGraphicsContext: currGraphicsContext)
         drawBorders(currGraphicsContext: currGraphicsContext)
-
+       
         /*let now = Date()
         let time =  now.timeIntervalSince(start)
         
@@ -73,10 +73,12 @@ public class UIBoard: UIView, SolutionDelegate {
     
     /// We draw our circles
     func drawQueens(currGraphicsContext: CGContext?){
-        var reinas = tablero2.mReinas.r
+        //UIImage *image = [UIImage imageNamed:@"Queen.png"];
+        let queenPng = #imageLiteral(resourceName: "Queen.png")
+        let reinas = tablero2.mReinas.r
         let width = self.frame.width/CGFloat(size)
 
-        currGraphicsContext?.setFillColor(UIColor.red.cgColor)
+        currGraphicsContext?.setFillColor(UIColor.green.cgColor)
         
         if(queensLayer == nil){
             print("queensLayer nil")
@@ -86,11 +88,26 @@ public class UIBoard: UIView, SolutionDelegate {
             layerContext?.setFillColor(UIColor.red.cgColor)
             
             for i in 0 ..< size {
+                
                 layerContext?.fillEllipse(in:
                     CGRect(x: width*CGFloat(reinas[i]),
                            y: width*CGFloat(i),
                            width: width,
                            height: width))
+                
+                
+                
+                if let context = layerContext{
+                    UIGraphicsPushContext(context);
+                    
+                    queenPng.draw(in: CGRect(x:width*CGFloat(reinas[i]),
+                                               y: width*CGFloat(i),
+                                               width: width,
+                                               height: width))
+                    
+                    UIGraphicsPopContext();
+
+                }
             }
         }
         else{
@@ -100,11 +117,25 @@ public class UIBoard: UIView, SolutionDelegate {
             
             layerContext?.clear(CGRect(x: width*CGFloat(queensPositions[point1]), y: width*CGFloat(point1), width: width, height: width))
             
+       
             layerContext?.fillEllipse(in:
                 CGRect(x: width*CGFloat(reinas[point1]),
                        y: width*CGFloat(point1),
                        width: width,
                        height: width))
+
+            if let context = layerContext{
+                UIGraphicsPushContext(context);
+                
+                queenPng.draw(in: CGRect(x:width*CGFloat(reinas[point1]),
+                                           y: width*CGFloat(point1),
+                                           width: width,
+                                           height: width))
+                
+                UIGraphicsPopContext();
+
+            }
+            
             
             layerContext?.clear(CGRect(x: width*CGFloat(queensPositions[point2]), y: width*CGFloat(point2), width: width, height: width))
             
@@ -113,6 +144,18 @@ public class UIBoard: UIView, SolutionDelegate {
                        y: width*CGFloat(point2),
                        width: width,
                        height: width))
+            
+            if let context = layerContext{
+                UIGraphicsPushContext(context);
+                
+                queenPng.draw(in: CGRect(x:width*CGFloat(reinas[point2]),
+                                           y: width*CGFloat(point2),
+                                           width: width,
+                                           height: width))
+                
+                UIGraphicsPopContext();
+
+            }
             
             self.queensPositions.removeAll()
             self.queensPositions.append(contentsOf: self.tablero2.mReinas.r)
