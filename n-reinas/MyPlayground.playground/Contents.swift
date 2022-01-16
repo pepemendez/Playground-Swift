@@ -23,6 +23,7 @@ extension MyViewController {
     }
 }
 
+//It comes from our LocalSearchSolver
 extension MyViewController: SolutionDelegate {
     func running() {
         started()
@@ -40,7 +41,7 @@ extension MyViewController: SolutionDelegate {
  
 extension MyViewController: MainInterfaceDelegate {
     func startButtonTapped() {
-        self.solver = LocalSearchSolver(reinas: 20, delay: 100, delegate: self)
+        self.solver = LocalSearchSolver(reinas: 20, delay: 500, delegate: self)
         self.mainView.initBoard(positions: self.solver.currentSolution)
         solver.Solve()
     }
@@ -58,7 +59,6 @@ class MyViewController : UIViewController {
 
     override func loadView() {
         mainView = UIReinas(delegate: self)
-        mainView.setContraints(mainView)
         self.view = mainView
         
     }

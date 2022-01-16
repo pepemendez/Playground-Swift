@@ -46,7 +46,8 @@ public class UIReinas: UIView {
         self.addSubview(label)
         self.addSubview(button)
         self.addSubview(board)
-        
+        setContraints(self)
+
         button.addTarget(self, action:#selector(self.buttonTapped), for: .touchUpInside )
     }
     
