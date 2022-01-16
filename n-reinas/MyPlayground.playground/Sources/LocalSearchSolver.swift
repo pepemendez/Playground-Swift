@@ -1,12 +1,13 @@
 import UIKit
 
 public protocol SolutionDelegate: class {
-    func runningSolver()
+    func running()
     func improved(point1: Int, point2: Int, current: [Int])
 }
 
 public class LocalSearchSolver {
     var timeStart: Date
+    var delay: Int
     public private(set) var mReinas: nReinas
     public private(set) var maxColisiones: Int
     public var currentSolution: [Int] {
@@ -16,7 +17,8 @@ public class LocalSearchSolver {
     
     weak var delegate: SolutionDelegate?
     
-    public init(reinas: Int, delegate: SolutionDelegate) {
+    public init(reinas: Int, delay: Int = 500, delegate: SolutionDelegate) {
+        self.delay = delay
         self.timeStart = Date()
         self.mReinas = nReinas(num_reinas: reinas)
         self.maxColisiones = mReinas.Colision()
@@ -80,7 +82,7 @@ public class LocalSearchSolver {
     }
     
     public func Solve(){
-        delegate?.runningSolver()
-        RunLoop(millisecs: 500)
+        delegate?.running()
+        RunLoop(millisecs: self.delay)
     }
 }

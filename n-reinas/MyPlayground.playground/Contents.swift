@@ -3,19 +3,15 @@
 import UIKit
 import PlaygroundSupport
 
-public protocol SolverDelegate{
-    func running()
-    func improvement(f: Int)
-    func done()
-}
-
-extension MyViewController: SolverDelegate {
-    func running() {
+///Solver functions according to each posible state
+extension MyViewController {
+    func started(){
         start = Date()
         mainView.changeState(state: .running)
     }
     
-    func improvement(f: Int) {
+    func improvement(f: Int, point1: Int, point2: Int, current: [Int]) {
+        mainView.improveBoard(point1: point1, point2: point2, current: current)
         mainView.printMessage(msg: "Current solution: \(f)")
     }
     
@@ -28,25 +24,23 @@ extension MyViewController: SolverDelegate {
 }
 
 extension MyViewController: SolutionDelegate {
-    func runningSolver() {
-        running()
+    func running() {
+        started()
     }
     
     func improved(point1: Int, point2: Int, current: [Int]) {
-        self.mainView.improveBoard(point1: point1, point2: point2, current: current)
-        
         if(solver.maxColisiones > 0){
-           improvement(f: solver.maxColisiones)
+            improvement(f: solver.maxColisiones, point1: point1, point2: point2, current: current)
         }
         else{
-           done()
+            done()
         }
     }
 }
  
 extension MyViewController: MainInterfaceDelegate {
     func startButtonTapped() {
-        self.solver = LocalSearchSolver(reinas: 20, delegate: self)
+        self.solver = LocalSearchSolver(reinas: 20, delay: 100, delegate: self)
         self.mainView.initBoard(positions: self.solver.currentSolution)
         solver.Solve()
     }
