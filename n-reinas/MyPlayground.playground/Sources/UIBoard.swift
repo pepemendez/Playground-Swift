@@ -1,13 +1,6 @@
 import UIKit
 import CoreGraphics
 
-public protocol SolverDelegate: class{
-    func running()
-    func improvement(f: Int)
-    func done()
-    func time(seconds: Double)
-}
-
 public class UIBoard: UIView {
     //public var size = 8
     var chessLayer: CGLayer?
@@ -16,8 +9,6 @@ public class UIBoard: UIView {
     var current: [Int]!
     var point1: Int!
     var point2: Int!
-    
-    public weak var delegate: SolverDelegate?
     
     public func improved(point1: Int, point2: Int, current: [Int]) {
         self.point1 = point1

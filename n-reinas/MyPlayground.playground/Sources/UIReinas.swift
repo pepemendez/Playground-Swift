@@ -13,6 +13,14 @@ public protocol MainInterfaceDelegate: AnyObject{
 public class UIReinas: UIView {
     weak var delegate: MainInterfaceDelegate?
     
+    let board: UIBoard = {
+        let board = UIBoard()
+        board.backgroundColor = UIColor.white
+        board.isOpaque = true
+        board.translatesAutoresizingMaskIntoConstraints = false
+        return board
+    }()
+    
     let button: UIBackgroundButton = {
         let button = UIBackgroundButton(type: .system)
         button.tintColor = UIColor.white
@@ -37,8 +45,7 @@ public class UIReinas: UIView {
         self.isOpaque = true
         self.addSubview(label)
         self.addSubview(button)
-        
-        setContraints(self)
+        self.addSubview(board)
         
         button.addTarget(self, action:#selector(self.buttonTapped), for: .touchUpInside )
     }
@@ -54,6 +61,20 @@ public class UIReinas: UIView {
         button.placeAtBottom(superView: view)
         button.centerHorizontal(superView: view)
         button.setWidth()
+        
+        board.centerVertical(superView: view)
+        board.centerHorizontal(superView: view)
+        board.setWidth(constant: 300)
+        board.setHeight(constant: 300)
+    }
+    
+    public func initBoard(positions: [Int]){
+        board.initBoard(positions: positions)
+        board.setNeedsDisplay()
+    }
+    
+    public func improveBoard(point1: Int, point2: Int, current: [Int]){
+        board.improved(point1: point1, point2: point2, current: current)
     }
     
     public func printMessage(msg: String){
